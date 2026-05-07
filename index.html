@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="id">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Hitung SPK</title>
+      <link
+         href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap"
+         rel="stylesheet"
+      />
+      <link rel="stylesheet" href="style.css" />
+   </head>
+   <body>
+      <!-- HEADER -->
+      <header>
+         <div class="logo">
+            <div class="logo-icon">⚖️</div>
+            <div class="logo-text">Hitung <span>SPK</span></div>
+         </div>
+         <div class="header-badge">v1.0 · Sistem Pendukung Keputusan</div>
+      </header>
+
+      <div class="app">
+         <!-- SIDEBAR -->
+         <nav class="sidebar">
+            <div class="sidebar-label">Navigasi</div>
+            <button
+               class="nav-btn active"
+               onclick="showPanel('home')"
+               id="nav-home"
+            >
+               <span style="font-size: 1rem">🏠</span> Beranda
+            </button>
+
+            <div class="sidebar-label">Metode Hitung</div>
+            <button
+               class="nav-btn"
+               data-method="wp"
+               onclick="showPanel('wp')"
+               id="nav-wp"
+            >
+               <span class="nav-dot"></span> Weighted Product
+            </button>
+            <button
+               class="nav-btn"
+               data-method="saw"
+               onclick="showPanel('saw')"
+               id="nav-saw"
+            >
+               <span class="nav-dot"></span> Simple Additive Weighting
+            </button>
+            <button
+               class="nav-btn"
+               data-method="smart"
+               onclick="showPanel('smart')"
+               id="nav-smart"
+            >
+               <span class="nav-dot"></span> SMART
+            </button>
+         </nav>
+
+         <!-- CONTENT -->
+         <main class="content">
+            <!-- ===== HOME PANEL ===== -->
+            <div class="panel active" id="panel-home">
+               <div class="home-hero">
+                  <div class="home-title">
+                     Hitung<br />
+                     <span class="accent1">Keputusan</span><br />
+                     <span class="accent2">Lebih</span>
+                     <span class="accent3">Cerdas</span>
+                  </div>
+                  <p class="home-desc">
+                     Aplikasi Sistem Pendukung Keputusan (SPK) berbasis web
+                     untuk menghitung dan membandingkan alternatif terbaik
+                     menggunakan tiga metode populer.
+                  </p>
+                  <div class="btn-group">
+                     <button class="btn btn-primary" onclick="showPanel('wp')">
+                        Mulai Hitung →
+                     </button>
+                  </div>
+               </div>
+
+               <div class="divider"></div>
+
+               <div class="card-title">Pilih Metode</div>
+               <div class="method-cards">
+                  <div class="method-card wp-card" onclick="showPanel('wp')">
+                     <div class="method-card-icon">✖️</div>
+                     <div class="method-card-name">Weighted Product</div>
+                     <div class="method-card-abbr">WP Method</div>
+                     <div class="method-card-desc">
+                        Mengalikan nilai kriteria yang sudah dipangkatkan dengan
+                        bobot ternormalisasi. Cocok untuk data yang bersifat
+                        perkalian.
+                     </div>
+                  </div>
+                  <div class="method-card saw-card" onclick="showPanel('saw')">
+                     <div class="method-card-icon">➕</div>
+                     <div class="method-card-name">
+                        Simple Additive Weighting
+                     </div>
+                     <div class="method-card-abbr">SAW Method</div>
+                     <div class="method-card-desc">
+                        Menjumlahkan hasil perkalian bobot dan nilai
+                        ternormalisasi. Metode SPK yang paling banyak digunakan.
+                     </div>
+                  </div>
+                  <div
+                     class="method-card smart-card"
+                     onclick="showPanel('smart')"
+                  >
+                     <div class="method-card-icon">🎯</div>
+                     <div class="method-card-name">SMART</div>
+                     <div class="method-card-abbr">
+                        Simple Multi Attribute Rating Technique
+                     </div>
+                     <div class="method-card-desc">
+                        Menggunakan utility function untuk menilai performa
+                        setiap alternatif berdasarkan range nilai kriteria.
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <!-- ===== WP PANEL ===== -->
+            <div class="panel" id="panel-wp">
+               <div class="panel-header">
+                  <div>
+                     <div class="panel-title">Weighted Product</div>
+                     <div class="panel-subtitle">
+                        Metode perkalian berbobot untuk pengambilan keputusan
+                     </div>
+                  </div>
+                  <span class="method-badge badge-wp">WP</span>
+               </div>
+
+               <div class="formula-box">
+                  <strong>Langkah WP:</strong><br />
+                  1. Normalisasi bobot: W<sub>j</sub> = w<sub>j</sub> / Σw<br />
+                  2. Hitung vektor S: S<sub>i</sub> = ∏ (x<sub>ij</sub>)<sup
+                     >Wj</sup
+                  >
+                  (benefit: +Wj, cost: -Wj)<br />
+                  3. Hitung vektor V: V<sub>i</sub> = S<sub>i</sub> / ΣS<sub
+                     >i</sub
+                  ><br />
+                  4. Alternatif terbaik = nilai V terbesar
+               </div>
+
+               <!-- Kriteria WP -->
+               <div class="card">
+                  <div class="card-title">Kriteria & Bobot</div>
+                  <div class="crit-table-wrap">
+                     <table>
+                        <thead>
+                           <tr>
+                              <th>No</th>
+                              <th>Nama Kriteria</th>
+                              <th>Bobot</th>
+                              <th>Tipe</th>
+                              <th>Aksi</th>
+                           </tr>
+                        </thead>
+                        <tbody id="wp-crit-body"></tbody>
+                     </table>
+                  </div>
+                  <div class="btn-group mt-1">
+                     <button
+                        class="btn btn-wp btn-sm"
+                        onclick="addCriteria('wp')"
+                     >
+                        + Tambah Kriteria
+                     </button>
+                  </div>
+               </div>
+
+               <!-- Alternatif WP -->
+               <div class="card">
+                  <div class="card-title">Alternatif & Nilai</div>
+                  <div class="crit-table-wrap">
+                     <table>
+                        <thead>
+                           <tr id="wp-alt-header">
+                              <th>No</th>
+                              <th>Nama Alternatif</th>
+                           </tr>
+                        </thead>
+                        <tbody id="wp-alt-body"></tbody>
+                     </table>
+                  </div>
+                  <div class="btn-group mt-1">
+                     <button
+                        class="btn btn-wp btn-sm"
+                        onclick="addAlternative('wp')"
+                     >
+                        + Tambah Alternatif
+                     </button>
+                  </div>
+               </div>
+
+               <div class="btn-group">
+                  <button class="btn btn-wp" onclick="calculate('wp')">
+                     ⚡ Hitung WP
+                  </button>
+                  <button class="btn" onclick="resetMethod('wp')">
+                     ↺ Reset
+                  </button>
+               </div>
+
+               <div
+                  id="wp-result"
+                  style="margin-top: 1.5rem; display: none"
+               ></div>
+            </div>
+
+            <!-- ===== SAW PANEL ===== -->
+            <div class="panel" id="panel-saw">
+               <div class="panel-header">
+                  <div>
+                     <div class="panel-title">Simple Additive Weighting</div>
+                     <div class="panel-subtitle">
+                        Penjumlahan terbobot nilai ternormalisasi
+                     </div>
+                  </div>
+                  <span class="method-badge badge-saw">SAW</span>
+               </div>
+
+               <div class="formula-box">
+                  <strong>Langkah SAW:</strong><br />
+                  1. Normalisasi matriks: r<sub>ij</sub> =
+                  x<sub>ij</sub>/max(x<sub>ij</sub>) untuk benefit | r<sub
+                     >ij</sub
+                  >
+                  = min(x<sub>ij</sub>)/x<sub>ij</sub> untuk cost<br />
+                  2. Normalisasi bobot: W<sub>j</sub> = w<sub>j</sub> / Σw<br />
+                  3. Hitung nilai preferensi: V<sub>i</sub> = Σ W<sub>j</sub> ·
+                  r<sub>ij</sub><br />
+                  4. Alternatif terbaik = nilai V terbesar
+               </div>
+
+               <div class="card">
+                  <div class="card-title">Kriteria & Bobot</div>
+                  <div class="crit-table-wrap">
+                     <table>
+                        <thead>
+                           <tr>
+                              <th>No</th>
+                              <th>Nama Kriteria</th>
+                              <th>Bobot</th>
+                              <th>Tipe</th>
+                              <th>Aksi</th>
+                           </tr>
+                        </thead>
+                        <tbody id="saw-crit-body"></tbody>
+                     </table>
+                  </div>
+                  <div class="btn-group mt-1">
+                     <button
+                        class="btn btn-saw btn-sm"
+                        onclick="addCriteria('saw')"
+                     >
+                        + Tambah Kriteria
+                     </button>
+                  </div>
+               </div>
+
+               <div class="card">
+                  <div class="card-title">Alternatif & Nilai</div>
+                  <div class="crit-table-wrap">
+                     <table>
+                        <thead>
+                           <tr id="saw-alt-header">
+                              <th>No</th>
+                              <th>Nama Alternatif</th>
+                           </tr>
+                        </thead>
+                        <tbody id="saw-alt-body"></tbody>
+                     </table>
+                  </div>
+                  <div class="btn-group mt-1">
+                     <button
+                        class="btn btn-saw btn-sm"
+                        onclick="addAlternative('saw')"
+                     >
+                        + Tambah Alternatif
+                     </button>
+                  </div>
+               </div>
+
+               <div class="btn-group">
+                  <button class="btn btn-saw" onclick="calculate('saw')">
+                     ⚡ Hitung SAW
+                  </button>
+                  <button class="btn" onclick="resetMethod('saw')">
+                     ↺ Reset
+                  </button>
+               </div>
+
+               <div
+                  id="saw-result"
+                  style="margin-top: 1.5rem; display: none"
+               ></div>
+            </div>
+
+            <!-- ===== SMART PANEL ===== -->
+            <div class="panel" id="panel-smart">
+               <div class="panel-header">
+                  <div>
+                     <div class="panel-title">SMART</div>
+                     <div class="panel-subtitle">
+                        Simple Multi Attribute Rating Technique
+                     </div>
+                  </div>
+                  <span class="method-badge badge-smart">SMART</span>
+               </div>
+
+               <div class="formula-box">
+                  <strong>Langkah SMART:</strong><br />
+                  1. Tentukan bobot tiap kriteria (Rank Order Centroid /
+                  langsung)<br />
+                  2. Normalisasi bobot: W<sub>j</sub> = w<sub>j</sub> / Σw<br />
+                  3. Hitung utility: u(x<sub>ij</sub>) = (x<sub>ij</sub> - min)
+                  / (max - min) × 100<br />
+                  4. Hitung nilai akhir: U(A<sub>i</sub>) = Σ W<sub>j</sub> ·
+                  u(x<sub>ij</sub>)<br />
+                  5. Alternatif terbaik = nilai U terbesar
+               </div>
+
+               <div class="card">
+                  <div class="card-title">Kriteria & Bobot</div>
+                  <div class="crit-table-wrap">
+                     <table>
+                        <thead>
+                           <tr>
+                              <th>No</th>
+                              <th>Nama Kriteria</th>
+                              <th>Bobot</th>
+                              <th>Tipe</th>
+                              <th>Aksi</th>
+                           </tr>
+                        </thead>
+                        <tbody id="smart-crit-body"></tbody>
+                     </table>
+                  </div>
+                  <div class="btn-group mt-1">
+                     <button
+                        class="btn btn-smart btn-sm"
+                        onclick="addCriteria('smart')"
+                     >
+                        + Tambah Kriteria
+                     </button>
+                  </div>
+               </div>
+
+               <div class="card">
+                  <div class="card-title">Alternatif & Nilai</div>
+                  <div class="crit-table-wrap">
+                     <table>
+                        <thead>
+                           <tr id="smart-alt-header">
+                              <th>No</th>
+                              <th>Nama Alternatif</th>
+                           </tr>
+                        </thead>
+                        <tbody id="smart-alt-body"></tbody>
+                     </table>
+                  </div>
+                  <div class="btn-group mt-1">
+                     <button
+                        class="btn btn-smart btn-sm"
+                        onclick="addAlternative('smart')"
+                     >
+                        + Tambah Alternatif
+                     </button>
+                  </div>
+               </div>
+
+               <div class="btn-group">
+                  <button class="btn btn-smart" onclick="calculate('smart')">
+                     ⚡ Hitung SMART
+                  </button>
+                  <button class="btn" onclick="resetMethod('smart')">
+                     ↺ Reset
+                  </button>
+               </div>
+
+               <div
+                  id="smart-result"
+                  style="margin-top: 1.5rem; display: none"
+               ></div>
+            </div>
+         </main>
+      </div>
+
+      <div class="notif" id="notif"></div>
+
+      <script src="main.js"></script>
+   </body>
+</html>
